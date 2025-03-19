@@ -1,0 +1,92 @@
+.category-container {
+    width: 60%;
+    max-width: 600px;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin: 0 auto;
+}
+
+h2 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.input-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.input-box input {
+    width: 80%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    text-align: center;
+    transition: border-color 0.3s;
+}
+
+.input-box input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.input-box button {
+    padding: 12px 20px;
+    border: none;
+    background-color: #28a745;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.input-box button:hover {
+    background-color: #218838;
+}
+
+.table-responsive {
+    margin-top: 20px;
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f4f4f4;
+}
+
+.no-data {
+    text-align: center;
+    font-style: italic;
+    color: #888;
+}
+
+@media screen and (max-width: 768px) {
+    .category-container {
+        width: 90%;
+    }
+
+    .input-box input {
+        width: 100%;
+    }
+}

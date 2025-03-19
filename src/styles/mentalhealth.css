@@ -1,0 +1,35 @@
+.mental-health-page {
+    padding: 20px;
+    background-color: #f1f1f1;
+    border-radius: 8px;
+  }
+  
+  .mental-health-page h2 {
+    text-align: center;
+    color: #2c3e50;
+  }
+  
+  .mental-health-page ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .mental-health-page .post-item {
+    background-color: #fff;
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .mental-health-page .post-item h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #3498db;
+  }
+  
+  .mental-health-page .post-item p {
+    margin: 5px 0;
+    font-size: 1rem;
+  }
+  
