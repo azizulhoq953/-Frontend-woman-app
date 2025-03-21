@@ -6,26 +6,29 @@ const GetAllOrders = () => {
 
   useEffect(() => {
     const fetchOrders = async () => {
-      // Get the token from localStorage (or wherever it's stored)
-      const token = localStorage.getItem("authToken"); // assuming the token is stored in localStorage
+      // Get the token from localStorage
+      const token = localStorage.getItem("authToken");
 
+      // Check if the token is available
       if (!token) {
         setError("No token found. Please log in.");
         return;
       }
 
       try {
+        // Send the GET request to fetch all orders
         const response = await fetch("http://localhost:5000/api/admin/all-orders", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`, // Include the token in the Authorization header
+            "Authorization": `Bearer ${token}`,  // Send token as Bearer token in Authorization header
           },
         });
 
+        // Check if the response is successful
         if (response.ok) {
           const data = await response.json();
-          setOrders(data);
+          setOrders(data);  // Set orders if response is successful
         } else {
           setError("Error fetching orders: Unauthorized");
         }
@@ -34,7 +37,7 @@ const GetAllOrders = () => {
       }
     };
 
-    fetchOrders();
+    fetchOrders();  // Call the function to fetch orders when the component mounts
   }, []);
 
   return (

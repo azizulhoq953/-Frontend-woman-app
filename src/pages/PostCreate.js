@@ -1,119 +1,186 @@
 import React, { useState, useEffect } from "react";
 
-export default function CreatePost({ onPostCreated }) {
-  const [title, setTitle] = useState("");
-  const [category, setCategory] = useState(""); // Start with an empty category
-  const [description, setDescription] = useState("");
-  const [categories, setCategories] = useState([]);
+const PostCreate = () => {
+  const [categories, setCategories] = useState([]); // Store categories
   const [loadingCategories, setLoadingCategories] = useState(true); // Loading state for categories
-  const [loadingPost, setLoadingPost] = useState(false); // Loading state for post creation
-  const [error, setError] = useState(""); // Error message state
+  const [category, setCategory] = useState(""); // Store selected category
+  const [title, setTitle] = useState(""); // Store title of the post
+  const [description, setDescription] = useState(""); // Store description of the post
+  const [image, setImage] = useState(null); // Store the selected image file
+  const [imagePreview, setImagePreview] = useState(""); // Store the image preview URL
+  const [loading, setLoading] = useState(false); // Loading state for post creation
+  const [error, setError] = useState(""); // Store any error messages
 
-  // Fetch categories from the API
+  // Fetch categories when the component mounts
   useEffect(() => {
     const fetchCategories = async () => {
+      const token = localStorage.getItem("authToken"); // Get token from localStorage
+
+      if (!token) {
+        setError("No token found, please log in.");
+        setLoadingCategories(false);
+        return;
+      }
+
       try {
-        const token = "your_bearer_token_here"; // Replace with the actual token
         const response = await fetch("http://localhost:5000/api/allcategory", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}` // Include the Bearer token here
-          }
+            "Authorization": `Bearer ${token}`, // Send token in Authorization header
+          },
         });
+
         const data = await response.json();
         if (response.ok) {
-          setCategories(data); // Set the categories state to fetched data
+          setCategories(data.categories); // Set categories in the state
         } else {
-          console.error("Error fetching categories", data);
+          setError("Error fetching categories");
         }
       } catch (error) {
-        console.error("Error fetching categories:", error);
+        setError("Error fetching categories");
+      } finally {
+        setLoadingCategories(false); // Set loading state to false after fetch
       }
     };
-  
-    fetchCategories();
+
+    fetchCategories(); // Fetch categories when component mounts
   }, []);
-  
+
+  // Handle image file change (image upload)
+  const handleImageChange = (e) => {
+    const file = e.target.files[0]; // Get the selected file
+    if (file) {
+      setImage(file); // Set the selected file to state
+
+      // Generate a preview of the image
+      const previewUrl = URL.createObjectURL(file);
+      setImagePreview(previewUrl);
+    }
+  };
+
+  // Handle form submission for creating a post
   const handleSubmit = async (e) => {
-    e.preventDefault();
-  
-    const newPost = { title, category, description };
-  
+    e.preventDefault(); // Prevent page refresh
+
+    if (!category || !title || !description || !image) {
+      setError("All fields are required");
+      return;
+    }
+
+    setLoading(true);
+
+    const postData = {
+      category,
+      title,
+      description,
+    };
+
+    const token = localStorage.getItem("authToken");
+
     try {
-      const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3Y2QzY2QwM2M0Y2ZhYzc5ZTNjMzE5NyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0MjM4MzU5MSwiZXhwIjoxNzQyOTg4MzkxfQ.ERG7hYvbS6-gHP-5LatQAYXAIkWjF46YDHvRkNOv4js"; // Replace with the actual token
+      const formData = new FormData();
+      formData.append("category", category);
+      formData.append("title", title);
+      formData.append("description", description);
+      formData.append("image", image); // Append the image file to FormData
+
       const response = await fetch("http://localhost:5000/api/admin/post", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}` // Include the Bearer token here
+          "Authorization": `Bearer ${token}`,
         },
-        body: JSON.stringify(newPost),
+        body: formData, // Send FormData containing the file
       });
-  
+
+      const data = await response.json();
+
       if (response.ok) {
-        const data = await response.json();
-        // Notify parent component that a post was created
-        onPostCreated(data);
-        // Reset form fields
+        // Reset form after successful post creation
         setTitle("");
         setDescription("");
-        setCategory(""); // Reset category to the initial empty value
+        setImage(null);
+        setImagePreview("");
+        setCategory("");
+        setError(""); // Clear any previous errors
+        alert("Post created successfully!");
       } else {
-        const errorData = await response.json();
-        console.error("Error creating post:", errorData); // Log any error message from the server
+        setError(data.error || "Error creating post");
       }
     } catch (error) {
-      console.error("Error creating post:", error);
+      setError("Error creating post");
+    } finally {
+      setLoading(false);
     }
   };
-  
 
   return (
     <div>
-      <h1>Create Post</h1>
+      <h3>Create Post</h3>
+
+      {/* Display error if there is one */}
+      {error && <p style={{ color: "red" }}>{error}</p>}
+
       <form onSubmit={handleSubmit}>
-        {error && <p style={{ color: "red" }}>{error}</p>} {/* Display error message */}
-        <div>
-          <label>Title:</label>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Category:</label>
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            required
-          >
-            <option value="">Select a category</option>
-            {loadingCategories ? (
-              <option>Loading categories...</option> // Loading state for categories
-            ) : (
-              categories.map((category) => (
-                <option key={category._id} value={category.name}>
-                  {category.name}
-                </option>
-              ))
-            )}
-          </select>
-        </div>
-        <div>
-          <label>Description:</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit" disabled={loadingPost}>
-          {loadingPost ? "Creating..." : "Create Post"} {/* Button text for loading state */}
+        {/* Category Selection */}
+        <label htmlFor="category">Category:</label>
+        <select
+          id="category"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)} // Send the _id of the category
+          required
+        >
+          <option value="">Select a category</option>
+          {loadingCategories ? (
+            <option>Loading categories...</option>
+          ) : (
+            categories.map((category) => (
+              <option key={category._id} value={category._id}> {/* Send the _id */}
+                {category.name}
+              </option>
+            ))
+          )}
+        </select>
+
+        {/* Post Title */}
+        <label htmlFor="title">Title:</label>
+        <input
+          type="text"
+          id="title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+        />
+
+        {/* Post Description */}
+        <label htmlFor="description">Description:</label>
+        <textarea
+          id="description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          required
+        />
+
+        {/* Post Image Upload */}
+        <label htmlFor="image">Image Upload:</label>
+        <input
+          type="file"
+          id="image"
+          accept="image/*"
+          onChange={handleImageChange} // Handle image file change
+          required
+        />
+
+        {/* Show image preview */}
+        {imagePreview && <img src={imagePreview} alt="Preview" width="200" />}
+
+        {/* Submit Button */}
+        <button type="submit" disabled={loading}>
+          {loading ? "Creating..." : "Create Post"}
         </button>
       </form>
     </div>
   );
-}
+};
+
+export default PostCreate;

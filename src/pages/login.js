@@ -8,29 +8,32 @@ const AdminLogin = ({ onLoginSuccess }) => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    
-    const loginData = { email, password };
-
+  
+    const loginData = {
+      email,
+      password,
+    };
+  
     try {
-      const response = await fetch("http://localhost:5000/api/admin/login", {
+      console.log("Sending login request:", loginData); // Log data being sent
+  
+      const response = await fetch("http://localhost:5000/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(loginData),
       });
-
+  
       const data = await response.json();
       
       if (response.ok) {
+        console.log("Login successful! Token:", data.token);
         // Store the token in localStorage or sessionStorage
         localStorage.setItem("authToken", data.token);
-
-        // Call the onLoginSuccess function passed as a prop to notify that login is successful
-        if (onLoginSuccess) {
-          onLoginSuccess(data.token);  // Ensure it's a function before calling it
-        }
+        // Handle successful login (e.g., redirect or show dashboard)
       } else {
+        console.log("Error in login:", data.error);
         setError("Invalid credentials or error logging in.");
       }
     } catch (error) {
@@ -38,6 +41,7 @@ const AdminLogin = ({ onLoginSuccess }) => {
       setError("An error occurred while logging in.");
     }
   };
+  
 
   return (
     <div>

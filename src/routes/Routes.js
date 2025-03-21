@@ -40,6 +40,7 @@ import CreatePost from '../pages/PostCreate';
 import { AddCounsellor, GetCounsellors } from '../pages/Counseller';
 import MentalHealth from '../pages/mentalhealth';
 import LoginPage from '../pages/login';
+import FetchPosts from '../pages/all-post';
 
 const AppRoutes = () => {
   return (
@@ -51,7 +52,7 @@ const AppRoutes = () => {
       <Route path="/allproducts" element={<AllProducts />} />
       <Route path="/product/:id" element={<ProductDetail />} />
       <Route path="/post" element={<CreatePost />} />
-      <Route path="/allPost" element={< handlePostCreated/>} />
+      <Route path="/allPost" element={< FetchPosts/>} />
       <Route path="/add-counsellor" element={<AddCounsellor />} />
       <Route path="/get-counsellors" element={<GetCounsellors />} />
       <Route path="/mentalhealth" element={<MentalHealth />} />

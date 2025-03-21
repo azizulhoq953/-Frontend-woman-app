@@ -32,18 +32,32 @@ export default function BasicTable() {
 
   useEffect(() => {
     const fetchOrders = async () => {
+      const token = localStorage.getItem("authToken"); // Get the token from localStorage
+
+      if (!token) {
+        console.error("No token found, please log in first.");
+        return;
+      }
+
       try {
-        const response = await fetch("http://localhost:5000/api/admin/all-orders");
+        const response = await fetch("http://localhost:5000/api/admin/all-orders", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`, // Send the token in the Authorization header
+          },
+        });
         const data = await response.json();
         if (response.ok) {
           setOrders(data); // set the fetched orders data into the state
         } else {
-          console.error("Error fetching orders");
+          console.error("Error fetching orders:", data.error);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
+
     fetchOrders(); // fetch orders on component mount
   }, []);
 
