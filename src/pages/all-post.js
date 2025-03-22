@@ -42,6 +42,37 @@ const FetchPosts = () => {
     fetchPosts(); // Fetch posts when the component mounts
   }, []);
 
+  // Delete post function
+  const deletePost = async (postId) => {
+    const token = localStorage.getItem("authToken"); // Get token from localStorage
+
+    if (!token) {
+      setError("You are not logged in.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:5000/api/admin/post/${postId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Remove the post from the state to update the UI
+        setPosts((prevPosts) => prevPosts.filter((post) => post._id !== postId));
+      } else {
+        setError(data.error || "Error deleting post");
+      }
+    } catch (error) {
+      setError("Error deleting post");
+    }
+  };
+
   return (
     <div>
       <h2>All Admin Posts</h2>
@@ -70,6 +101,9 @@ const FetchPosts = () => {
             {/* Ensure likes and comments are properly rendered as numbers */}
             <p><strong>Likes:</strong> {post.likes ? post.likes.length : 0}</p>
             <p><strong>Comments:</strong> {post.comments ? post.comments.length : 0}</p>
+
+            {/* Delete button */}
+            <button onClick={() => deletePost(post._id)}>Delete Post</button>
           </div>
         ))}
       </div>

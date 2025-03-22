@@ -51,11 +51,20 @@ const AddCounsellor = () => {
         submitData.append(key, formData[key]);
       }
     });
-
+  
     try {
+      const token = localStorage.getItem("authToken");
+      if (!token) {
+        alert("Please log in first.");
+        return;
+      }
+  
       const response = await fetch("http://localhost:5000/api/admin/add", {
         method: "POST",
         body: submitData,
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
       });
       const data = await response.json();
       if (response.ok) {
@@ -67,6 +76,7 @@ const AddCounsellor = () => {
       console.error("Error submitting form:", error);
     }
   };
+  
 
   return (
     <div className="counsellor-container">
@@ -109,52 +119,6 @@ const AddCounsellor = () => {
   );
 };
 
-const GetCounsellors = () => {
-  const [counsellors, setCounsellors] = useState([]);
 
-  useEffect(() => {
-    const fetchCounsellors = async () => {
-        try {
-          const response = await fetch("http://localhost:5000/api/all/");
-          const data = await response.json();
-          console.log(data); // Check what the data looks like
-      
-          if (response.ok) {
-            setCounsellors(data);
-          } else {
-            console.error("Error fetching counsellors");
-          }
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
-      };
-    fetchCounsellors();
-  }, []);
 
-  return (
-    <div className="counsellor-list">
-      <h2>All Counsellors</h2>
-      <ul>
-        {counsellors && Array.isArray(counsellors) && counsellors.length > 0 ? (
-          counsellors.map((counsellor) => (
-            <li key={counsellor.email}>
-              <h3>{counsellor.name}</h3>
-              <p>Email: {counsellor.email}</p>
-              <p>Phone: {counsellor.phone}</p>
-              <p>Speciality: {counsellor.speciality}</p>
-              <p>Experience: {counsellor.experience} years</p>
-              <p>Education: {counsellor.education}</p>
-              <p>Location: {counsellor.location}</p>
-              <p>Availability: {counsellor.availability.join(", ")}</p>
-              <img src={counsellor.image} alt={counsellor.name} width="100" />
-            </li>
-          ))
-        ) : (
-          <p>No counsellors available.</p>
-        )}
-      </ul>
-    </div>
-  );
-};
-
-export { AddCounsellor, GetCounsellors };
+export { AddCounsellor};

@@ -66,11 +66,6 @@ export const SidebarData = [
     heading: 'allproducts',
     link: '/allproducts',
 },
-{
-  icon: UilPackage,
-  heading: 'ProductsDetails',
-  link: '/product/:id',
-},
   {
       icon: UilPackage,
       heading: 'Post-Create',
@@ -93,8 +88,18 @@ export const SidebarData = [
   },
   {
     icon: UilPackage,
+    heading: 'get-Mental-Health',
+    link: '/get-mentalhealth',
+  },
+  {
+    icon: UilPackage,
     heading: 'Get Counsellors',
     link: '/get-counsellors',
+  },
+  {
+    icon: UilPackage,
+    heading: 'Change-password',
+    link: '/change-password',
   },
   {
       icon: UilChart,

@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start; /* Adjusted to start from the top */
   position: fixed; /* Sidebar is fixed on the left */
   left: 0;
   top: 0;
@@ -13,18 +13,20 @@
   padding: 1rem;
   transition: all 300ms ease;
   z-index: 1000; /* Ensure the sidebar stays on top */
+  overflow-y: auto; /* Make the sidebar scrollable if content exceeds height */
 }
 
 /* Main content area (so it doesn't get covered by Sidebar) */
 .page-content {
-    margin-left: 250px;  /* Adjust this width based on the sidebar width */
-    width: calc(800% - 10px);
-    padding: 20px;
-    overflow-y: auto;
-    background-color: #f4f4f4; /* Background color for the main content */
-    min-height: 100vh; /* Ensures content section takes up full height */
-  }
+  margin-left: 250px; /* Adjust this width based on the sidebar width */
+  width: calc(1000% - 250px); /* Ensure content fills the rest of the space */
+  padding: 20px;
+  overflow-y: auto;
+  background-color: #f4f4f4; /* Background color for the main content */
+  min-height: 100vh; /* Ensures content section takes up full height */
+}
 
+/* Styling for the logo */
 .logo {
   display: flex;
   flex-direction: column;
@@ -35,13 +37,17 @@
   gap: 0.5rem;
 }
 
+/* Menu styling */
 .menu {
   display: flex;
   flex-direction: column;
   width: 100%;
   gap: 1.5rem;
+  overflow-y: auto; /* Allows vertical scrolling if the menu is long */
+  max-height: calc(100vh - 150px); /* Maximum height of the sidebar to make it scrollable */
 }
 
+/* General menu item styling */
 .menuItem {
   display: flex;
   align-items: center;
@@ -62,9 +68,21 @@
   background-color: var(--activeItem);
 }
 
+/* Styling for the "Show All Links" button - removed in this case */
+.menuItem.show-all-btn {
+  background-color: #4CAF50; /* Green color */
+  color: white;
+  cursor: pointer;
+}
+
+.menuItem.show-all-btn:hover {
+  background-color: #45a049; /* Darker green on hover */
+}
+
+/* Media query for smaller screens */
 @media screen and (max-width: 768px) {
   .Sidebar {
-    width: 60px;
+    width: 60px; /* Smaller sidebar on mobile */
   }
 
   .page-content {
@@ -73,6 +91,6 @@
   }
 
   .menuItem span {
-    display: none;
+    display: none; /* Hide the text on mobile */
   }
 }

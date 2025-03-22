@@ -30,6 +30,8 @@ const Sidebar = () => {
             </div>
           </Link>
         ))}
+
+        {/* Logout Button */}
         <div className="menuItem">
           <UilSignOutAlt />
         </div>
