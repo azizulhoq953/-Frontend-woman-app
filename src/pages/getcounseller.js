@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import "../styles/getcounseller.css";
 const GetCounsellors = () => {
   const [counsellors, setCounsellors] = useState([]);
   const [error, setError] = useState("");
@@ -23,7 +23,7 @@ const GetCounsellors = () => {
           },
         });
 
-        const data = await response.json(); // Use the response data
+        const data = await response.json();
 
         if (response.ok) {
           setCounsellors(data.counselors);  // Set the counselors data from the response
@@ -37,31 +37,79 @@ const GetCounsellors = () => {
       }
     };
 
-    fetchCounsellors();
+    fetchCounsellors(); // Fetch counselors when component mounts
   }, []);
 
+  const handleDelete = async (id) => {
+    const token = localStorage.getItem("authToken");
+
+    if (!token) {
+      setError("No token found. Please log in.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await fetch(`http://localhost:5000/api/admin/counselor/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setCounsellors(counsellors.filter((counsellor) => counsellor._id !== id));
+      } else {
+        setError(data.error || "Error deleting counselor");
+      }
+    } catch (error) {
+      setError("Error deleting counselor: " + error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div>
-      <h2>All Counsellors</h2>
+    <div className="counsellors-container">
+      <h2 className="heading">All Counsellors</h2>
 
-      {loading && <p>Loading...</p>}
+      {loading && <p className="loading">Loading...</p>}
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p className="error">{error}</p>}
 
       {counsellors.length === 0 && !loading && <p>No counselors available.</p>}
 
-      <div>
+      <div className="counsellors-list">
         {counsellors.map((counsellor) => (
-          <div key={counsellor._id} style={{ marginBottom: "20px", border: "1px solid #ccc", padding: "10px" }}>
-            <h3>{counsellor.name}</h3>
-            <p>Email: {counsellor.email}</p>
-            <p>Phone: {counsellor.phone}</p>
-            <p>Specialty: {counsellor.specialty}</p>
-            <p>Experience: {counsellor.experience} years</p>
-            <p>Education: {counsellor.education}</p>
-            <p>Location: {counsellor.location}</p>
-            <p>Availability: {counsellor.availability.join(", ")}</p>
-            {counsellor.image && <img src={`http://localhost:5000/${counsellor.image}`} alt={counsellor.name} width="100" />}
+          <div key={counsellor._id} className="counsellor-card">
+            <div className="counsellor-image">
+              {counsellor.image ? (
+                <img
+                  src={`http://localhost:5000/${counsellor.image}`}
+                  alt={counsellor.name}
+                  className="image"
+                />
+              ) : (
+                <div className="no-image">No Image</div>
+              )}
+            </div>
+
+            <div className="counsellor-details">
+              <h3>{counsellor.name}</h3>
+              <p><strong>Email:</strong> {counsellor.email}</p>
+              <p><strong>Phone:</strong> {counsellor.phone}</p>
+              <p><strong>Specialty:</strong> {counsellor.specialty}</p>
+              <p><strong>Experience:</strong> {counsellor.experience} years</p>
+              <p><strong>Location:</strong> {counsellor.location}</p>
+              <p><strong>Availability:</strong> {counsellor.availability.join(", ")}</p>
+
+              <button className="delete-btn" onClick={() => handleDelete(counsellor._id)}>
+                Delete
+              </button>
+            </div>
           </div>
         ))}
       </div>
@@ -69,4 +117,4 @@ const GetCounsellors = () => {
   );
 };
 
-export default GetCounsellors;  // This is the default export
+export default GetCounsellors;

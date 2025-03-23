@@ -44,43 +44,44 @@ const GetMentalHealthPosts = () => {
     }, []);
   
     // Handle removing a mental health post
-    const handleRemovePost = async (postId) => {
-        if (!postId) {
-          setError("Post ID is missing!");  // Display error if post ID is missing
-          return;
-        }
-      
-        const token = localStorage.getItem("authToken");  // Get token from localStorage
-        if (!token) {
-          setError("You need to be logged in first.");  // Display error if not logged in
-          return;
-        }
-      
-        setLoading(true);  // Set loading state to true while making the request
-      
-        try {
-          const response = await fetch(`http://localhost:5000/api/admin/mental/${postId}`, {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}`,  // Include token in the Authorization header
-            },
-          });
-      
-          const data = await response.json();
-      
-          if (response.ok) {
-            setMentalHealthPosts((prevPosts) => prevPosts.filter((post) => post._id !== postId));  // Filter out the deleted post
-            alert("Post deleted successfully!");
-          } else {
-            setError(data.error || "Error removing post");
-          }
-        } catch (error) {
-          setError("Error removing post: " + error.message);  // Handle any fetch errors
-        } finally {
-          setLoading(false);  // Set loading state to false after request completion
-        }
-      };
+const handleRemovePost = async (postId) => {
+  if (!postId) {
+    setError("Post ID is missing!");  // Display error if post ID is missing
+    return;
+  }
+
+  const token = localStorage.getItem("authToken");  // Get token from localStorage
+  if (!token) {
+    setError("You need to be logged in first.");  // Display error if not logged in
+    return;
+  }
+
+  setLoading(true);  // Set loading state to true while making the request
+
+  try {
+    const response = await fetch(`http://localhost:5000/api/admin/mental/${postId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,  // Include token in the Authorization header
+      },
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      setMentalHealthPosts((prevPosts) => prevPosts.filter((post) => post._id !== postId));  // Filter out the deleted post
+      alert("Post deleted successfully!");
+    } else {
+      setError(data.error || "Error removing post");
+    }
+  } catch (error) {
+    setError("Error removing post: " + error.message);  // Handle any fetch errors
+  } finally {
+    setLoading(false);  // Set loading state to false after request completion
+  }
+};
+
       
     return (
       <div className="mental-health-container">

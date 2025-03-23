@@ -14,10 +14,10 @@ function App() {
           {/* Page content area, ensuring it doesn't get overlapped */}
           <div className="page-content">
             <AppRoutes />
-            {/* <ParentComponent /> */}
-            <Sidebar />
-            <MainDash />
-            <RightSide />
+             {/* <ParentComponent />  */}
+             <Sidebar />
+            {/* // <MainDash />
+            <RightSide />  */}
           </div>
         </div>
       </div>

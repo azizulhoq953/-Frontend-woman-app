@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "../styles/Counsellor.css"; // You can style this according to your needs
 
 const AddCounsellor = () => {
@@ -7,17 +7,16 @@ const AddCounsellor = () => {
     email: "",
     password: "",
     phone: "",
-    speciality: "",
+    specialty: "",
     experience: "",
     education: "",
     bio: "",
-    availability: [],
+    availability: [], // Handle availability as an array
     location: "",
     time: "",
     image: null,
   });
 
-  // Handle input change
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -30,13 +29,7 @@ const AddCounsellor = () => {
 
   // Handle availability selection
   const handleAvailabilityChange = (e) => {
-    const { options } = e.target;
-    const selected = [];
-    for (let i = 0; i < options.length; i++) {
-      if (options[i].selected) {
-        selected.push(options[i].value);
-      }
-    }
+    const selected = Array.from(e.target.selectedOptions, (option) => option.value);
     setFormData((prev) => ({ ...prev, availability: selected }));
   };
 
@@ -44,6 +37,7 @@ const AddCounsellor = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const submitData = new FormData();
+
     Object.keys(formData).forEach((key) => {
       if (key === "availability") {
         formData[key].forEach((day) => submitData.append("availability[]", day));
@@ -51,14 +45,14 @@ const AddCounsellor = () => {
         submitData.append(key, formData[key]);
       }
     });
-  
+
     try {
       const token = localStorage.getItem("authToken");
       if (!token) {
         alert("Please log in first.");
         return;
       }
-  
+
       const response = await fetch("http://localhost:5000/api/admin/add", {
         method: "POST",
         body: submitData,
@@ -66,17 +60,33 @@ const AddCounsellor = () => {
           "Authorization": `Bearer ${token}`,
         },
       });
+
       const data = await response.json();
+
       if (response.ok) {
-        alert("Counsellor added successfully!");
+        alert("Counselor added successfully!");
+        // Reset form after successful submission
+        setFormData({
+          name: "",
+          email: "",
+          password: "",
+          phone: "",
+          specialty: "",
+          experience: "",
+          education: "",
+          bio: "",
+          availability: [],
+          location: "",
+          time: "",
+          image: null,
+        });
       } else {
-        alert("Error adding counsellor");
+        alert(data.error || "Error adding counselor");
       }
     } catch (error) {
       console.error("Error submitting form:", error);
     }
   };
-  
 
   return (
     <div className="counsellor-container">
@@ -97,6 +107,7 @@ const AddCounsellor = () => {
             </div>
           ) : null
         ))}
+
         <div className="form-group">
           <label htmlFor="availability">Availability</label>
           <select multiple id="availability" onChange={handleAvailabilityChange}>
@@ -109,16 +120,16 @@ const AddCounsellor = () => {
             <option value="Sunday">Sunday</option>
           </select>
         </div>
+
         <div className="form-group">
           <label htmlFor="image">Upload Image</label>
           <input type="file" id="image" name="image" onChange={handleImageChange} />
         </div>
+
         <button type="submit">Add Counsellor</button>
       </form>
     </div>
   );
 };
 
-
-
-export { AddCounsellor};
+export { AddCounsellor };

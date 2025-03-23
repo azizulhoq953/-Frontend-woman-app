@@ -13,7 +13,7 @@ const Sidebar = () => {
       <div className="logo">
         <img src={Logo} alt="logo" />
         <span>
-          Sh<span>o</span>ps
+          Nir<span>bho</span>ya
         </span>
       </div>
 

@@ -58,7 +58,7 @@ form {
   }
   
   .password-field input {
-    width: 80%;
+    width: 100%;
     padding: 10px;
     padding-right: 40px; /* Space for the button */
     border-radius: 5px;
@@ -67,9 +67,9 @@ form {
   
   .password-field button {
     position: absolute;
-    right: -150px;
-    top: 70%;
-    transform: translateY(-50%);
+    right: -160px;
+    top: 75%;
+    transform: translateY(-80%);
     background: transparent;
     border: none;
     cursor: pointer;

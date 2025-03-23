@@ -1,0 +1,95 @@
+.order-list-container {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  h2 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .error {
+    color: red;
+    font-size: 14px;
+  }
+  
+  .order-item {
+    background-color: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .order-header h3 {
+    font-size: 20px;
+    color: #333;
+  }
+  
+  .order-header p {
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .order-details p {
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .order-items ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .order-items li {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+  }
+  
+  .product-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .product-image {
+    border-radius: 5px;
+    margin-right: 10px;
+  }
+  
+  .product-details {
+    margin-left: 10px;
+  }
+  
+  .product-details p {
+    margin: 0;
+    font-size: 14px;
+  }
+  
+  .order-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .delete-button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .delete-button:hover {
+    background-color: #c0392b;
+  }
+  
+  .delete-button:focus {
+    outline: none;
+  }
+  
