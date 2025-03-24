@@ -1,95 +1,198 @@
+/* Basic Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f8f9fa;
+  color: #495057;
+  line-height: 1.6;
+}
+
+/* Main container for orders */
 .order-list-container {
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 40px 30px;
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.order-list-container:hover {
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+}
+
+/* Title */
+h2 {
+  font-size: 32px;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+  margin-bottom: 40px;
+  letter-spacing: 1px;
+}
+
+/* Error message */
+.error {
+  color: #d9534f;
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Order list container (Grid) */
+.order-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px; /* Spacing between cards */
+  margin-top: 20px;
+}
+
+/* Order card styles */
+.order-item {
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-left: 5px solid #007bff;
+}
+
+.order-item:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.order-item .order-header {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.order-header h3 {
+  font-size: 24px;
+  font-weight: 500;
+  color: #2d3436;
+  margin-bottom: 8px;
+  text-transform: capitalize;
+}
+
+.order-header p {
+  font-size: 16px;
+  color: #6c757d;
+}
+
+.order-details p {
+  font-size: 16px;
+  color: #495057;
+  margin: 8px 0;
+}
+
+/* Items list */
+.order-items ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.order-items li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.product-info {
+  display: flex;
+  align-items: center;
+}
+
+.product-image {
+  border-radius: 8px;
+  margin-right: 15px;
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+}
+
+.product-details p {
+  font-size: 14px;
+  color: #333;
+  margin: 0;
+}
+
+.product-details strong {
+  color: #007bff;
+}
+
+/* Button Styles */
+.order-actions {
+  margin-top: 30px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.delete-button {
+  background-color: #ff4747;
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 40px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  text-transform: uppercase;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+}
+
+.delete-button:hover {
+  background-color: #e84141;
+  transform: scale(1.05);
+}
+
+.delete-button:focus {
+  outline: none;
+}
+
+/* Loader styles */
+.loading-message {
+  font-size: 20px;
+  color: #ffc107;
+  text-align: center;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+/* Media Queries for responsive design */
+@media (max-width: 768px) {
+  .order-list-container {
+    padding: 25px;
   }
-  
-  h2 {
-    font-size: 28px;
-    color: #333;
-    margin-bottom: 20px;
-  }
-  
-  .error {
-    color: red;
-    font-size: 14px;
-  }
-  
+
   .order-item {
-    background-color: white;
     padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
-  
+
   .order-header h3 {
-    font-size: 20px;
-    color: #333;
+    font-size: 22px;
   }
-  
-  .order-header p {
-    font-size: 14px;
-    color: #555;
-  }
-  
+
   .order-details p {
-    font-size: 16px;
-    color: #333;
-  }
-  
-  .order-items ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .order-items li {
-    display: flex;
-    align-items: center;
-    padding: 10px 0;
-  }
-  
-  .product-info {
-    display: flex;
-    align-items: center;
-  }
-  
-  .product-image {
-    border-radius: 5px;
-    margin-right: 10px;
-  }
-  
-  .product-details {
-    margin-left: 10px;
-  }
-  
-  .product-details p {
-    margin: 0;
     font-size: 14px;
   }
-  
-  .order-actions {
-    margin-top: 20px;
-    display: flex;
-    justify-content: flex-end;
-  }
-  
+
   .delete-button {
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+    padding: 12px 22px;
+    font-size: 16px;
   }
-  
-  .delete-button:hover {
-    background-color: #c0392b;
+
+  .product-image {
+    width: 50px;
+    height: 50px;
   }
-  
-  .delete-button:focus {
-    outline: none;
-  }
-  
+}

@@ -15,31 +15,6 @@ import img2 from '../imgs/img2.png'
 import img3 from '../imgs/img3.png'
 
 
-// export const SidebarData = [
-//     {
-//         icon:UilEstate,
-//         heading:'DashBoard'
-//     },
-//     {
-//         icon:UilClipboardAlt,
-//         heading:'Orders',
-//     },{
-//         icon:UilUsersAlt,
-//         heading:'category',
-//     },
-//     {
-//         icon:UilPackage,
-//         heading:'Products',
-//     },
-//     {
-//       icon:UilPackage,
-//       heading:'Post',
-//   },
-//     {
-//         icon:UilChart,
-//         heading:'Analytics'
-//     }
-// ]
 export const SidebarData = [
   {
       icon: UilEstate,
@@ -83,6 +58,11 @@ export const SidebarData = [
   },
   {
     icon: UilPackage,
+    heading: 'Get Counsellors',
+    link: '/get-counsellors',
+  },
+  {
+    icon: UilPackage,
     heading: 'Mental Health',
     link: '/mentalhealth',
   },
@@ -93,18 +73,8 @@ export const SidebarData = [
   },
   {
     icon: UilPackage,
-    heading: 'Get Counsellors',
-    link: '/get-counsellors',
-  },
-  {
-    icon: UilPackage,
     heading: 'Change-password',
     link: '/change-password',
-  },
-  {
-      icon: UilChart,
-      heading: 'Analytics',
-      link: '/analytics',
   },
 ];
 

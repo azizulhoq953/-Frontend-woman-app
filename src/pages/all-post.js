@@ -1,58 +1,59 @@
 import React, { useState, useEffect } from "react";
+import "../styles/all-post.css"; // Assuming you've added styles in a CSS file
 
-const FetchPosts = () => {
-  const [posts, setPosts] = useState([]); // State to hold posts
-  const [loading, setLoading] = useState(true); // State to track loading state
-  const [error, setError] = useState(""); // State to track any errors
+const GetAllOrders = () => {
+  const [orders, setOrders] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  // Fetch posts when the component mounts
   useEffect(() => {
-    const fetchPosts = async () => {
-      const token = localStorage.getItem("authToken"); // Get token from localStorage
+    const fetchOrders = async () => {
+      const token = localStorage.getItem("authToken");
 
       if (!token) {
-        setError("You are not logged in.");
-        setLoading(false);
+        setError("No token found. Please log in.");
         return;
       }
 
+      setLoading(true);
+
       try {
-        const response = await fetch("http://localhost:5000/api/admin/post/get", {
+        const response = await fetch("http://localhost:5000/api/admin/all-orders", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`, // Include the token in the header
+            "Authorization": `Bearer ${token}`,
           },
         });
 
-        const data = await response.json();
-
         if (response.ok) {
-          setPosts(data.posts); // Set posts if the fetch is successful
+          const data = await response.json();
+          setOrders(data.orders);
         } else {
-          setError(data.error || "Error fetching posts");
+          setError("Error fetching orders: Unauthorized");
         }
       } catch (error) {
-        setError("Error fetching posts");
+        setError("Error fetching data: " + error.message);
       } finally {
-        setLoading(false); // Set loading state to false after fetch
+        setLoading(false);
       }
     };
 
-    fetchPosts(); // Fetch posts when the component mounts
+    fetchOrders();
   }, []);
 
-  // Delete post function
-  const deletePost = async (postId) => {
-    const token = localStorage.getItem("authToken"); // Get token from localStorage
+  const handleDeleteOrder = async (orderId) => {
+    const token = localStorage.getItem("authToken");
 
     if (!token) {
-      setError("You are not logged in.");
+      setError("No token found. Please log in.");
       return;
     }
 
+    setLoading(true);
+
     try {
-      const response = await fetch(`http://localhost:5000/api/admin/post/${postId}`, {
+      const response = await fetch(`http://localhost:5000/api/admin/remove-order/${orderId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -60,50 +61,75 @@ const FetchPosts = () => {
         },
       });
 
-      const data = await response.json();
-
       if (response.ok) {
-        // Remove the post from the state to update the UI
-        setPosts((prevPosts) => prevPosts.filter((post) => post._id !== postId));
+        setOrders(orders.filter(order => order._id !== orderId));
       } else {
-        setError(data.error || "Error deleting post");
+        setError("Failed to delete the order.");
       }
     } catch (error) {
-      setError("Error deleting post");
+      setError("Error deleting order: " + error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div>
-      <h2>All Admin Posts</h2>
+    <div className="order-list-container">
+      <h2>All Orders</h2>
 
-      {loading && <p>Loading posts...</p>}
+      {error && <p className="error">{error}</p>}
+      {loading && <p>Loading...</p>}
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {orders.length === 0 && !loading && <p>No orders found.</p>}
 
-      {posts.length === 0 && !loading && <p>No posts found.</p>}
+      <div className="order-list">
+        {orders.map((order) => (
+          <div key={order._id} className="order-item">
+            <div className="order-header">
+              <h3>{order.userId.name}</h3>
+              <p>{order.userId.email}</p>
+            </div>
 
-      <div>
-        {posts.map((post) => (
-          <div key={post._id} style={{ border: "1px solid #ccc", margin: "10px", padding: "10px" }}>
-            <h3>{post.title}</h3>
-            <p>{post.description}</p>
+            <div className="order-details">
+              <p><strong>Phone:</strong> {order.userId.phone}</p>
+              <p><strong>Status:</strong> {order.status}</p>
+              <p><strong>Total:</strong> ${order.totalAmount}</p>
+              <p><strong>Created At:</strong> {new Date(order.createdAt).toLocaleString()}</p>
+            </div>
 
-            {/* Ensure you're rendering the category name instead of the whole category object */}
-            {post.category && post.category.name && <p><strong>Category:</strong> {post.category.name}</p>}
+            <div className="order-items">
+              <h4>Items:</h4>
+              <ul>
+                {order.products.map((item, index) => {
+                  const imageUrl = item.productId?.image || "/path/to/default/image.jpg";
 
-            {/* Check if image exists before rendering */}
-            {post.imageUrl && <img src={post.imageUrl} alt={post.title} width="200" />}
+                  return (
+                    <li key={index}>
+                      <div className="product-info">
+                        <img
+                          src={imageUrl}
+                          alt={item.productId?.name || "Unknown Product"}
+                          width="50"
+                          height="50"
+                          className="product-image"
+                        />
+                        <div className="product-details">
+                          <p><strong>{item.productId?.name || "Unknown Product"}</strong></p>
+                          <p>Quantity: {item.quantity}</p>
+                          <p>Price: ${item.price}</p>
+                        </div>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
 
-            {/* Render userId, but make sure it's not an object */}
-            {post.userId && post.userId._id && <p><strong>Created By:</strong> {post.userId._id}</p>}
-            
-            {/* Ensure likes and comments are properly rendered as numbers */}
-            <p><strong>Likes:</strong> {post.likes ? post.likes.length : 0}</p>
-            <p><strong>Comments:</strong> {post.comments ? post.comments.length : 0}</p>
-
-            {/* Delete button */}
-            <button onClick={() => deletePost(post._id)}>Delete Post</button>
+            <div className="order-actions">
+              <button onClick={() => handleDeleteOrder(order._id)} className="delete-button">
+                Delete Order
+              </button>
+            </div>
           </div>
         ))}
       </div>
@@ -111,4 +137,4 @@ const FetchPosts = () => {
   );
 };
 
-export default FetchPosts;
+export default GetAllOrders
