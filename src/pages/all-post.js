@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import "../styles/all-post.css"; // Assuming you've added styles in a CSS file
 
-const GetAllOrders = () => {
-  const [orders, setOrders] = useState([]);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+const GetAllPosts = () => {
+  const [posts, setPosts] = useState([]); // State to store posts
+  const [error, setError] = useState(null); // State to store error messages
+  const [loading, setLoading] = useState(false); // Loading state for fetching posts
 
+  // Fetch all posts from the API
   useEffect(() => {
-    const fetchOrders = async () => {
+    const fetchAllPosts = async () => {
       const token = localStorage.getItem("authToken");
 
       if (!token) {
@@ -18,7 +19,7 @@ const GetAllOrders = () => {
       setLoading(true);
 
       try {
-        const response = await fetch("http://localhost:5000/api/admin/all-orders", {
+        const response = await fetch("http://localhost:5000/api/admin/post/get", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -28,9 +29,9 @@ const GetAllOrders = () => {
 
         if (response.ok) {
           const data = await response.json();
-          setOrders(data.orders);
+          setPosts(data.posts); // Set fetched posts to the state
         } else {
-          setError("Error fetching orders: Unauthorized");
+          setError("Error fetching posts: Unauthorized");
         }
       } catch (error) {
         setError("Error fetching data: " + error.message);
@@ -39,102 +40,82 @@ const GetAllOrders = () => {
       }
     };
 
-    fetchOrders();
+    fetchAllPosts();
   }, []);
 
-  const handleDeleteOrder = async (orderId) => {
+  // Handle the delete post action
+  const handleDeletePost = async (postId) => {
     const token = localStorage.getItem("authToken");
-
+  
     if (!token) {
       setError("No token found. Please log in.");
       return;
     }
-
+  
     setLoading(true);
-
+  
     try {
-      const response = await fetch(`http://localhost:5000/api/admin/remove-order/${orderId}`, {
+      const response = await fetch(`http://localhost:5000/api/admin/post/${postId}`, { // Ensure the URL is correct
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
+          "Authorization": `Bearer ${token}`, // Send token as Bearer token
         },
       });
-
+  
       if (response.ok) {
-        setOrders(orders.filter(order => order._id !== orderId));
+        setPosts(posts.filter((post) => post._id !== postId)); // Remove deleted post from state
+        alert("Post removed successfully");
       } else {
-        setError("Failed to delete the order.");
+        setError("Failed to delete the post.");
       }
     } catch (error) {
-      setError("Error deleting order: " + error.message);
+      setError("Error deleting post: " + error.message);
     } finally {
       setLoading(false);
     }
   };
-
+  
   return (
-    <div className="order-list-container">
-      <h2>All Orders</h2>
+<div className="post-list-container">
+  <h2>All Posts</h2>
 
-      {error && <p className="error">{error}</p>}
-      {loading && <p>Loading...</p>}
+  {error && <p className="error">{error}</p>}
+  {loading && <p className="loading-message">Loading...</p>}
 
-      {orders.length === 0 && !loading && <p>No orders found.</p>}
+  {posts.length === 0 && !loading && <p>No posts found.</p>}
 
-      <div className="order-list">
-        {orders.map((order) => (
-          <div key={order._id} className="order-item">
-            <div className="order-header">
-              <h3>{order.userId.name}</h3>
-              <p>{order.userId.email}</p>
-            </div>
+  <div className="post-list">
+    {posts.map((post) => (
+      <div key={post._id} className="post-item">
+        <div className="post-header">
+          <h3>{post.title}</h3>
+          {/* <p>{post.userId?.username || 'Unknown User'}</p> */}
+        </div>
 
-            <div className="order-details">
-              <p><strong>Phone:</strong> {order.userId.phone}</p>
-              <p><strong>Status:</strong> {order.status}</p>
-              <p><strong>Total:</strong> ${order.totalAmount}</p>
-              <p><strong>Created At:</strong> {new Date(order.createdAt).toLocaleString()}</p>
-            </div>
+        <div className="post-details">
+          <p><strong>Category:</strong> {post.categoryName}</p>
+          <p><strong>Description:</strong> {post.description}</p>
+          <img
+      src={post.imageUrl || "/path/to/default/image.jpg"}
+         alt={post.title}
+       width="150" // Adjust the width as per your design
+       style={{ borderRadius: "10px" }}
+/>
 
-            <div className="order-items">
-              <h4>Items:</h4>
-              <ul>
-                {order.products.map((item, index) => {
-                  const imageUrl = item.productId?.image || "/path/to/default/image.jpg";
+        </div>
 
-                  return (
-                    <li key={index}>
-                      <div className="product-info">
-                        <img
-                          src={imageUrl}
-                          alt={item.productId?.name || "Unknown Product"}
-                          width="50"
-                          height="50"
-                          className="product-image"
-                        />
-                        <div className="product-details">
-                          <p><strong>{item.productId?.name || "Unknown Product"}</strong></p>
-                          <p>Quantity: {item.quantity}</p>
-                          <p>Price: ${item.price}</p>
-                        </div>
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-
-            <div className="order-actions">
-              <button onClick={() => handleDeleteOrder(order._id)} className="delete-button">
-                Delete Order
-              </button>
-            </div>
-          </div>
-        ))}
+        <div className="post-actions">
+          <button onClick={() => handleDeletePost(post._id)} className="delete-button">
+            Delete Post
+          </button>
+        </div>
       </div>
-    </div>
+    ))}
+  </div>
+</div>
+
   );
 };
 
-export default GetAllOrders
+export default GetAllPosts;

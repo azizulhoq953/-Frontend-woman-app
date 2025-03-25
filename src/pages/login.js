@@ -40,7 +40,7 @@ const AdminLogin = ({ onLoginSuccess }) => {
 
         // Redirect to dashboard or another page after a short delay
         setTimeout(() => {
-          navigate('/dashboard'); // Redirect to the dashboard or another page
+          navigate('/orders'); // Redirect to the dashboard or another page
         }, 2000); // Wait for 2 seconds before redirecting
       } else {
         console.log("Error in login:", data.error);
