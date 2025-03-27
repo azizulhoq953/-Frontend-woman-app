@@ -1,6 +1,9 @@
+
+
+
 // import React, { useState, useEffect } from "react";
 // import "../styles/OrderPage.css"; // Assuming you've added styles in a CSS file
-
+// import { FaTrashAlt } from 'react-icons/fa';
 // const GetAllOrders = () => {
 //   const [orders, setOrders] = useState([]); // Store orders
 //   const [error, setError] = useState(null); // Store errors
@@ -78,67 +81,60 @@
 //       <h2>All Orders</h2>
 
 //       {error && <p className="error">{error}</p>}
-//       {loading && <p>Loading...</p>}
+//       {loading && <p className="loading-message">Loading...</p>}
 
 //       {orders.length === 0 && !loading && <p>No orders found.</p>}
 
-//       <div className="order-list">
-//         {orders.map((order) => (
-//           <div key={order._id} className="order-item">
-//             <div className="order-header">
-//               <h3>{order.userId.name}</h3>
-//               <p>{order.userId.email}</p>
-//             </div>
-
-//             <div className="order-details">
-//               <p><strong>Phone:</strong> {order.userId.phone}</p>
-//               <p><strong>Status:</strong> {order.status}</p>
-//               <p><strong>Total:</strong> ${order.totalAmount}</p>
-//               <p><strong>Created At:</strong> {new Date(order.createdAt).toLocaleString()}</p>
-//             </div>
-
-//             <div className="order-items">
-//               <h4>Items:</h4>
-//               <ul>
-//                 {order.products.map((item, index) => {
-//                   const imageUrl = item.productId?.image || "/path/to/default/image.jpg";
-
-//                   return (
-//                     <li key={index}>
-//                       <div className="product-info">
-//                         <img
-//                           src={imageUrl}
-//                           alt={item.productId?.name || "Unknown Product"}
-//                           width="50"
-//                           height="50"
-//                           className="product-image"
-//                         />
-//                         <div className="product-details">
-//                           <p><strong>{item.productId?.name || "Unknown Product"}</strong></p>
-//                           <p>Quantity: {item.quantity}</p>
-//                           <p>Price: ${item.price}</p>
-//                         </div>
-//                       </div>
-//                     </li>
-//                   );
-//                 })}
-//               </ul>
-//             </div>
-
-//             <div className="order-actions">
-//               <button onClick={() => handleDeleteOrder(order._id)} className="delete-button">
-//                 Delete Order
-//               </button>
-//             </div>
-//           </div>
-//         ))}
+//       <div className="table-container">
+//         <table className="orders-table">
+//           <thead>
+//             <tr>
+//               <th>Customer Name</th>
+//               <th>Email</th>
+//               <th>Phone</th>
+//               <th>Status</th>
+//               <th>Total</th>
+//               <th>Items</th>
+//               <th>Actions</th>
+//             </tr>
+//           </thead>
+//           <tbody>
+//             {orders.map((order) => (
+//               <tr key={order._id}>
+//                 <td>{order.userId.name}</td>
+//                 <td>{order.userId.email}</td>
+//                 <td>{order.userId.phone}</td>
+//                 <td>{order.status}</td>
+//                 <td>${order.totalAmount}</td>
+//                 <td>
+//                   <ul>
+//                     {order.products.map((item, index) => (
+//                       <li key={index}>
+//                         <p>{item.productId?.name || "Unknown Product"}</p>
+//                         <p>Quantity: {item.quantity}</p>
+//                         <p>Price: ${item.price}</p>
+//                       </li>
+//                     ))}
+//                   </ul>
+//                 </td>
+//                 <td>
+//                     <button onClick={() => handleDeleteOrder(order._id)} className="remove-btn">
+//                                 <FaTrashAlt /> {/* React Icons Trash Icon */}
+//                                   </button>
+//                 </td>
+//               </tr>
+//             ))}
+//           </tbody>
+//         </table>
 //       </div>
 //     </div>
 //   );
 // };
 
 // export default GetAllOrders;
+
 import React, { useState, useEffect } from "react";
+import { FaTrashAlt } from 'react-icons/fa';
 import "../styles/OrderPage.css"; // Assuming you've added styles in a CSS file
 
 const GetAllOrders = () => {
@@ -222,54 +218,58 @@ const GetAllOrders = () => {
 
       {orders.length === 0 && !loading && <p>No orders found.</p>}
 
-      <div className="order-list">
-        {orders.map((order) => (
-          <div key={order._id} className="order-item">
-            <div className="order-header">
-              <h3>{order.userId.name}</h3>
-              <p>{order.userId.email}</p>
-            </div>
-
-            <div className="order-details">
-              <p><strong>Phone:</strong> {order.userId.phone}</p>
-              <p><strong>Status:</strong> {order.status}</p>
-              <p><strong>Total:</strong> ${order.totalAmount}</p>
-              {/* <p><strong>Created At:</strong> {new Date(order.createdAt).toLocaleString()}</p> */}
-            </div>
-
-            <div className="order-items">
-              <h4>Items:</h4>
-              <ul>
-                {order.products.map((item, index) => {
-                  const imageUrl = item.productId?.image || "/path/to/default/image.jpg";
-
-                  return (
-                    <li key={index}>
-                      <div className="product-info">
-                        <img
-                          src={imageUrl}
-                          alt={item.productId?.name || "Unknown Product"}
-                          className="product-image"
-                        />
-                        <div className="product-details">
-                          <p><strong>{item.productId?.name || "Unknown Product"}</strong></p>
-                          <p>Quantity: {item.quantity}</p>
-                          <p>Price: ${item.price}</p>
-                        </div>
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-
-            <div className="order-actions">
-              <button onClick={() => handleDeleteOrder(order._id)} className="delete-button">
-                Delete Order
-              </button>
-            </div>
-          </div>
-        ))}
+      <div className="table-container">
+        <table className="orders-table">
+          <thead>
+            <tr>
+              <th>Customer Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Status</th>
+              <th>Total</th>
+              <th>Items</th>
+              <th>Payment Method</th>
+              <th>Transaction ID</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {orders.map((order) => (
+              <tr key={order._id}>
+                <td>{order.userId.name}</td>
+                <td>{order.userId.email}</td>
+                <td>{order.userId.phone}</td>
+                <td>{order.status}</td>
+                <td>${order.totalAmount}</td>
+                <td>
+                  <ul>
+                    {order.products.map((item, index) => (
+                      <li key={index}>
+                        {/* Handle the case when productId is null */}
+                        {item.productId ? (
+                          <div>
+                            <p>{item.productId.name || "Product Name Unavailable"}</p>
+                            <p>Quantity: {item.quantity}</p>
+                            <p>Price: ${item.price || "Price unavailable"}</p>
+                          </div>
+                        ) : (
+                          <p>Product details are unavailable</p>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </td>
+                <td>{order.paymentMethod}</td>
+                <td>{order.transactionId}</td>
+                <td>
+                  <button onClick={() => handleDeleteOrder(order._id)} className="remove-btn">
+                    <FaTrashAlt /> {/* React Icons Trash Icon */}
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

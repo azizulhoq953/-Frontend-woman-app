@@ -1,82 +1,44 @@
-/* Post container */
-.post-list-container {
-  width: 80%;
-  margin: 0 auto;
-  padding: 20px;
+/* all-post.css */
+.table-container {
+  overflow-x: auto;
 }
 
-/* Grid layout for posts */
-.post-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
-}
-
-/* Post item card styling */
-.post-item {
-  background-color: #f9f9f9;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-
-/* Post image */
-.post-item img {
+.posts-table {
   width: 100%;
-  height: auto;
-  border-radius: 8px;
-  margin-bottom: 10px;
+  border-collapse: collapse;
+  margin-top: 20px;
 }
 
-/* Post title and description */
-.post-item h3 {
-  font-size: 18px;
-  margin-bottom: 10px;
+.posts-table th,
+.posts-table td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #ddd;
 }
 
-.post-item p {
-  font-size: 14px;
-  margin-bottom: 10px;
+.posts-table th {
+  background-color: #f4f4f4;
 }
 
-/* View Details Link */
-.post-item a {
-  display: block;
-  margin-top: 10px;
-  text-align: center;
-  color: #007bff;
-  text-decoration: none;
-}
-
-.post-item a:hover {
-  text-decoration: underline;
-}
-
-/* Remove button (Delete) */
 .delete-button {
   background-color: red;
   color: white;
   border: none;
   padding: 5px 10px;
-  font-size: 14px;
   cursor: pointer;
   border-radius: 5px;
-  margin-top: 10px;
 }
 
 .delete-button:hover {
   background-color: darkred;
 }
 
-/* Optional: Error or Loading messages */
 .error {
   color: red;
-  text-align: center;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .loading-message {
-  text-align: center;
   font-size: 16px;
+  font-weight: bold;
 }

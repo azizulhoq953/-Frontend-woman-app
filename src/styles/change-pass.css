@@ -54,7 +54,7 @@ form {
   /* Styling for password input fields and the show/hide text button */
 .password-field {
     position: relative;
-    width: 100%;
+    width: 90%;
   }
   
   .password-field input {
@@ -67,7 +67,7 @@ form {
   
   .password-field button {
     position: absolute;
-    right: -160px;
+    right: -200px;
     top: 75%;
     transform: translateY(-80%);
     background: transparent;
