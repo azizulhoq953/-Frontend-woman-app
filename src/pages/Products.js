@@ -16,7 +16,7 @@ const CreateProduct = () => {
   // Fetch categories when the component mounts
   useEffect(() => {
     const fetchCategories = async () => {
-      const token = localStorage.getItem("authToken"); // Get token from localStorage
+      const token = localStorage.getItem("authToken");
 
       if (!token) {
         setError("No token found, please log in.");
@@ -65,52 +65,62 @@ const CreateProduct = () => {
 
   // Handle form submission for creating a product
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent page refresh
-
+    e.preventDefault();
+    
     if (!category || !name || !description || !price || images.length === 0) {
       setError("All fields are required");
       return;
     }
-
+    
     setLoading(true);
-
+    
     const token = localStorage.getItem("authToken");
-
+    
     const formData = new FormData();
     formData.append("category", category);
     formData.append("name", name);
     formData.append("description", description);
     formData.append("price", price);
+    
+    // Change to match your backend expectation ("image" instead of "images")
     Array.from(images).forEach((image) => {
-      formData.append("images", image); // Append each image to the FormData
+      formData.append("image", image); // Changed from "images" to "image"
     });
-
+    
     try {
+      console.log("Sending request with token:", token);
+      
       const response = await fetch("http://localhost:5000/api/admin/addProduct", {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${token}`,
+          // Don't set Content-Type header for FormData; browser will set it with boundary
         },
-        body: formData, // Send FormData containing the files
+        body: formData,
       });
-
+      
+      // Log response for debugging
+      console.log("Response status:", response.status);
+      
       const data = await response.json();
-
+      console.log("Response data:", data);
+      
       if (response.ok) {
-        // Reset form after successful product creation
+        // Success handling
         setName("");
         setDescription("");
         setPrice("");
         setCategory("");
         setImages([]);
         setImagePreviews([]);
-        setError(""); // Clear any previous errors
+        setError("");
         alert("Product created successfully!");
       } else {
         setError(data.error || "Error creating product");
       }
     } catch (error) {
-      setError("Error creating product");
+      console.error("Fetch error:", error);
+      setError("Error creating product: " + error.message);
     } finally {
       setLoading(false);
     }
@@ -178,9 +188,10 @@ const CreateProduct = () => {
         <input
           type="file"
           id="image"
+          name="image"  // Added to match backend expectation
           accept="image/*"
           multiple
-          onChange={handleImageChange} // Handle image file change
+          onChange={handleImageChange}
           required
         />
 
